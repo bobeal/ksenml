@@ -1,7 +1,13 @@
-package com.egm.ksenml
+package org.bobeal.ksenml.parser
 
+import org.bobeal.ksenml.model.ResolvedRecord
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import mu.KotlinLogging
+import java.time.Instant
+import kotlin.math.pow
+
+private val logger = KotlinLogging.logger {}
 
 object SenMLParser {
 
@@ -16,23 +22,30 @@ object SenMLParser {
         val resolvedRecords = mutableListOf<ResolvedRecord>()
 
         var bn: String? = null
-        var bt: Double?
+        var bt: Double? = null
         var bu: String? = null
         var bv: Double? = null
         this.forEach {
             bn = it.bn ?: bn
-            bt = it.bt
+            bt = it.bt ?: bt
             bu = it.bu ?: bu
             bv = it.bv ?: bv
 
             val resolvedRecord = ResolvedRecord(
                 n = calculateName(bn, it.n),
-                t = it.t ?: it.bt!!,
+                t = calculateTime(bt ?: 0.0, it.t ?: 0.0),
                 u = calculateUnit(bu, it.u),
-                v = calculateValue(bv, it.v)
+                v = calculateValue(bv, it.v),
+                vs = it.vs,
+                vb = it.vb,
+                vd = it.vd
             )
 
-            resolvedRecords.add(resolvedRecord)
+            if (resolvedRecord.hasNoValue()) {
+                logger.warn("Ignoring record $resolvedRecord as it has no value")
+            } else {
+                resolvedRecords.add(resolvedRecord)
+            }
         }
 
         return resolvedRecords
@@ -51,9 +64,18 @@ object SenMLParser {
     private fun calculateUnit(bu: String?, u: String?): String? =
         u ?: bu
 
-    private fun calculateValue(bv: Double?, v: Double): Double =
-        if (bv != null)
+    private fun calculateValue(bv: Double?, v: Double?): Double? =
+        if (bv != null && v != null)
             bv + v
+        else v
+
+    private fun calculateTime(bt: Double, t: Double): Instant {
+        val totalTime = bt + t
+
+        // TODO to finish
+        if (totalTime > 2.0.pow(28))
+            return Instant.ofEpochMilli((totalTime * 1000).toLong())
         else
-            v
+            return Instant.now()
+    }
 }

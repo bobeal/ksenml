@@ -1,11 +1,11 @@
-package com.egm.ksenml
+package org.bobeal.ksenml.parser
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class RecordTest {
+class RecordTests {
 
     @Test
     fun `it should parse a single datapoint`() {
