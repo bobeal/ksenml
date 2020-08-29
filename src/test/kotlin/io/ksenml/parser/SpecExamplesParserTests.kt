@@ -1,8 +1,12 @@
 package io.ksenml.parser
 
+import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.collections.shouldBeSingleton
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.comparables.shouldBeEqualComparingTo
 import io.kotest.matchers.date.shouldBeAfter
 import io.kotest.matchers.date.shouldBeBefore
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import mu.KotlinLogging
@@ -46,7 +50,8 @@ class SpecExamplesParserTests {
 
         val resolvedRecords = SenMLParser.fromJson(pack).normalize()
 
-        resolvedRecords.size.shouldBe(2)
+        resolvedRecords.shouldHaveSize(2)
+
         resolvedRecords[0].should {
             it.n.shouldBe("urn:dev:ow:10e2073a01080063:voltage")
             it.v.shouldBe(120.1)
@@ -80,7 +85,8 @@ class SpecExamplesParserTests {
 
         val resolvedRecords = SenMLParser.fromJson(pack).normalize()
 
-        resolvedRecords.size.shouldBe(7)
+        resolvedRecords.shouldHaveSize(7)
+
         resolvedRecords[0].should {
             it.n.shouldBe("urn:dev:ow:10e2073a0108006:voltage")
             it.v.shouldBe(120.1)
@@ -120,7 +126,7 @@ class SpecExamplesParserTests {
 
         val resolvedRecords = SenMLParser.fromJson(pack).normalize()
 
-        resolvedRecords.size.shouldBe(12)
+        resolvedRecords.shouldHaveSize(12)
 
         resolvedRecords[0].should {
             it.n.shouldBe("urn:dev:ow:10e2073a01080063")
@@ -166,7 +172,242 @@ class SpecExamplesParserTests {
             """.trimIndent()
 
         val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        resolvedRecords.shouldHaveSize(13)
 
-        logger.debug { resolvedRecords }
+        resolvedRecords.should {
+            it.forEach { record ->
+                record.n.shouldBe("urn:dev:ow:10e2073a01080063")
+            }
+        }
+
+        resolvedRecords[0].should {
+            it.u.shouldBe("%RH")
+        }
+        val baseTime = resolvedRecords[0].t
+
+        resolvedRecords[1].should {
+            it.u.shouldBe("lon")
+            it.v.shouldBe(24.30621)
+            it.t.shouldBe(baseTime)
+        }
+
+        resolvedRecords[2].should {
+            it.t.shouldBe(baseTime)
+        }
+
+        resolvedRecords[3].should {
+            it.u.shouldBe("%RH")
+            it.t.shouldBe(baseTime.plusSeconds(60))
+        }
+
+        resolvedRecords[9].should {
+            it.u.shouldBe("%EL")
+            it.t.shouldBe(baseTime.plusSeconds(150))
+        }
+
+        resolvedRecords[10].should {
+            it.u.shouldBe("%RH")
+            it.t.shouldBe(baseTime.plusSeconds(180))
+        }
+    }
+
+    @Test
+    fun `it should parse example 6 from the spec`() {
+        val pack =
+            """
+                [
+                    { "bn": "2001:db8::2/", "bt": 1320078429, "n": "temperature", "v": 25.2, "u": "Cel" },
+                    { "n": "humidity", "v": 30, "u": "%RH" },
+                    { "bn": "2001:db8::1/", "n": "temperature", "v": 12.3, "u": "Cel" },
+                    { "n": "humidity", "v": 67, "u": "%RH" } 
+                ]
+            """.trimIndent()
+
+        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        resolvedRecords.shouldHaveSize(4)
+
+        resolvedRecords.should {
+            it.forEach { record ->
+                record.t.epochSecond.shouldBe(1320078429)
+            }
+        }
+
+        resolvedRecords[0].should {
+            it.n.shouldBe("2001:db8::2/temperature")
+            it.u.shouldBe("Cel")
+            it.v.shouldBe(25.2)
+        }
+
+        resolvedRecords[1].should {
+            it.n.shouldBe("2001:db8::2/humidity")
+            it.u.shouldBe("%RH")
+            it.v.shouldBe(30)
+        }
+
+        resolvedRecords[2].should {
+            it.n.shouldBe("2001:db8::1/temperature")
+            it.u.shouldBe("Cel")
+            it.v.shouldBe(12.3)
+        }
+
+        resolvedRecords[3].should {
+            it.n.shouldBe("2001:db8::1/humidity")
+            it.u.shouldBe("%RH")
+            it.v.shouldBe(67)
+        }
+    }
+
+    @Test
+    fun `it should parse example 7 from the spec`() {
+        val pack =
+            """
+                [
+                    { "bn": "urn:dev:ow:10e2073a01080063:", "n":"temp", "v":23.1, "u":"Cel" },
+                    { "n":"label", "vs":"Machine Room" },
+                    { "n":"open", "vb": false },
+                    { "n":"nfv-reader", "vd":"aGkgCg" }
+                ]
+            """.trimIndent()
+
+        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        resolvedRecords.shouldHaveSize(4)
+
+        resolvedRecords[0].should {
+            it.v.shouldBe(23.1)
+            it.vs.shouldBeNull()
+            it.vb.shouldBeNull()
+            it.vd.shouldBeNull()
+        }
+
+        resolvedRecords[1].should {
+            it.v.shouldBeNull()
+            it.vs.shouldBe("Machine Room")
+            it.vb.shouldBeNull()
+            it.vd.shouldBeNull()
+        }
+
+        resolvedRecords[2].should {
+            it.v.shouldBeNull()
+            it.vs.shouldBeNull()
+            it.vb?.shouldBeFalse()
+            it.vd.shouldBeNull()
+        }
+
+        resolvedRecords[3].should {
+            it.v.shouldBeNull()
+            it.vs.shouldBeNull()
+            it.vb.shouldBeNull()
+            it.vd.shouldBe("aGkgCg")
+        }
+    }
+
+    @Test
+    fun `it should parse example 9 from the spec`() {
+        val pack =
+            """
+                [
+                    {"bn":"urn:dev:ow:10e2073a01080063:"},
+                    {"n":"temp","u":"Cel","v":23.1},
+                    {"n":"heat","u":"/","v":1},
+                    {"n":"fan","u":"/","v":0}
+                ]
+            """.trimIndent()
+
+        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        resolvedRecords.shouldHaveSize(3)
+
+        resolvedRecords[0].should {
+            it.n.shouldBe("urn:dev:ow:10e2073a01080063:temp")
+            it.u.shouldBe("Cel")
+            it.v.shouldBe(23.1)
+        }
+
+        resolvedRecords[1].should {
+            it.n.shouldBe("urn:dev:ow:10e2073a01080063:heat")
+            it.u.shouldBe("/")
+            it.v.shouldBe(1.0)
+        }
+
+        resolvedRecords[2].should {
+            it.n.shouldBe("urn:dev:ow:10e2073a01080063:fan")
+            it.u.shouldBe("/")
+            it.v.shouldBe(0.0)
+        }
+    }
+
+    @Test
+    fun `it should parse example 10 from the spec`() {
+        val pack =
+            """
+                [
+                    { "n": "urn:dev:ow:10e2073a01080063", "t": 1276020076, "v":23.5, "u":"Cel" },
+                    { "n": "urn:dev:ow:10e2073a01080063", "t": 1276020091, "v":23.6, "u":"Cel" }
+                ]
+            """.trimIndent()
+
+        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        resolvedRecords.shouldHaveSize(2)
+
+        resolvedRecords[1].t.shouldBe(resolvedRecords[0].t.plusSeconds(15))
+        resolvedRecords[1].v.shouldBe(23.6)
+    }
+
+    @Test
+    fun `it should parse example 11 from the spec`() {
+        val pack =
+            """
+                [
+                    { "bn": "urn:dev:ow:10e2073a01080063", "t": 1276020076, "v":23.5, "u":"Cel" },
+                    { "t": 1276020091, "v":23.6, "u":"Cel" }
+                ]
+            """.trimIndent()
+
+        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        resolvedRecords.shouldHaveSize(2)
+
+        resolvedRecords[0].n.shouldBe("urn:dev:ow:10e2073a01080063")
+        resolvedRecords[1].n.shouldBe("urn:dev:ow:10e2073a01080063")
+    }
+
+    @Test
+    fun `it should parse example 12 from the spec`() {
+        val pack =
+            """
+               [
+                    {"bt":1.320078429e+09, "bu":"/", "n":"2001:db8::3", "v":1 },
+                    {"n":"2001:db8::4", "v":1 }
+               ]
+            """.trimIndent()
+
+        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        resolvedRecords.shouldHaveSize(2)
+
+        resolvedRecords[0].t.shouldBeEqualComparingTo(resolvedRecords[1].t)
+    }
+
+    @Test
+    fun `it should parse example 13 from the spec`() {
+        val pack =
+            """
+                [
+                    { "bt":1.320078429e+09,"bu":"/", "n":"2001:db8::3","v":0.5},
+                    { "n":"2001:db8::4","v":0.5},
+                    { "n":"2001:db8::3","t":0.1,"v":0},
+                    { "n":"2001:db8::4","t":0.1,"v":0}
+                ]
+            """.trimIndent()
+
+        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        resolvedRecords.shouldHaveSize(4)
+
+        resolvedRecords.should {
+            it.forEach { record ->
+                record.u.shouldBe("/")
+            }
+        }
+
+        resolvedRecords[0].t.shouldBeEqualComparingTo(resolvedRecords[1].t)
+        resolvedRecords[2].t.shouldBe(resolvedRecords[1].t.plusMillis(100))
+        resolvedRecords[3].t.shouldBe(resolvedRecords[1].t.plusMillis(100))
     }
 }
