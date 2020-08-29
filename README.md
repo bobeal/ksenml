@@ -1,4 +1,4 @@
-![Build status](https://github.com/bobeal/ksenml/workflows/Build%20and%20publish%20package/badge.svg)
+![Build status](https://github.com/bobeal/ksenml/workflows/Build/badge.svg)
 
 # ksenml
 

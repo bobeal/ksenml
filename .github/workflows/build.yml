@@ -1,4 +1,4 @@
-name: Build and publish package
+name: Build
 on:
   push:
     branches:
@@ -14,8 +14,13 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Build and test
         run: ./gradlew build
-
 
 
