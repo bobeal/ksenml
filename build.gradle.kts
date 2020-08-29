@@ -6,7 +6,7 @@ plugins {
     kotlin("plugin.serialization") version "1.4.0"
 }
 
-group = "com.egm"
+group = "io.ksenml"
 version = "1.0-SNAPSHOT"
 
 repositories {

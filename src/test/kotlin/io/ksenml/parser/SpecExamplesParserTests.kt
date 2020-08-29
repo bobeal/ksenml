@@ -1,4 +1,4 @@
-package org.bobeal.ksenml.parser
+package io.ksenml.parser
 
 import io.kotest.matchers.collections.shouldBeSingleton
 import io.kotest.matchers.date.shouldBeAfter
@@ -6,7 +6,7 @@ import io.kotest.matchers.date.shouldBeBefore
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import mu.KotlinLogging
-import org.bobeal.ksenml.parser.SenMLParser.normalize
+import io.ksenml.parser.SenMLParser.normalize
 import org.junit.jupiter.api.Test
 import java.time.Instant
 

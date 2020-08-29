@@ -1,10 +1,10 @@
-package org.bobeal.ksenml.parser
+package io.ksenml.parser
 
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import org.bobeal.ksenml.parser.SenMLParser.normalize
+import io.ksenml.parser.SenMLParser.normalize
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

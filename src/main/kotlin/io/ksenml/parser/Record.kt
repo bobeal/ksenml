@@ -1,4 +1,4 @@
-package org.bobeal.ksenml.parser
+package io.ksenml.parser
 
 import kotlinx.serialization.Serializable
 

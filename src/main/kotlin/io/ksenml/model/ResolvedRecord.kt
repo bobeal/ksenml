@@ -1,4 +1,4 @@
-package org.bobeal.ksenml.model
+package io.ksenml.model
 
 import java.time.Instant
 

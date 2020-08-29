@@ -1,6 +1,6 @@
-package org.bobeal.ksenml.parser
+package io.ksenml.parser
 
-import org.bobeal.ksenml.model.ResolvedRecord
+import io.ksenml.model.ResolvedRecord
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
