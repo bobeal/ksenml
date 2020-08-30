@@ -72,10 +72,9 @@ object SenMLParser {
     private fun calculateTime(bt: Double, t: Double): Instant {
         val totalTime = bt + t
 
-        // TODO to finish
-        if (totalTime > 2.0.pow(28))
-            return Instant.ofEpochMilli((totalTime * 1000).toLong())
+        return if (totalTime > 2.0.pow(28))
+            Instant.ofEpochMilli((totalTime * 1000).toLong())
         else
-            return Instant.now()
+            Instant.now().plusSeconds(totalTime.toLong())
     }
 }
