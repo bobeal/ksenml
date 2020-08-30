@@ -1,4 +1,5 @@
 ![Build status](https://github.com/bobeal/ksenml/workflows/Build/badge.svg)
+[![Release](https://jitpack.io/v/bobeal/ksenml.svg)](https://jitpack.io/#bobeal/ksenml)
 
 # ksenml
 

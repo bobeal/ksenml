@@ -3,11 +3,11 @@ package io.ksenml.parser
 import io.ksenml.model.ResolvedRecord
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import mu.KotlinLogging
+import org.slf4j.LoggerFactory
 import java.time.Instant
 import kotlin.math.pow
 
-private val logger = KotlinLogging.logger {}
+private val logger = LoggerFactory.getLogger("SenMLParser")
 
 fun String.toSenMLRecords(): List<Record> =
     try {
