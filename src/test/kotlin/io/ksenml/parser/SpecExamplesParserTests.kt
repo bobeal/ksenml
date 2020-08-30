@@ -9,12 +9,9 @@ import io.kotest.matchers.date.shouldBeBefore
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import mu.KotlinLogging
 import io.ksenml.parser.SenMLParser.normalize
 import org.junit.jupiter.api.Test
 import java.time.Instant
-
-private val logger = KotlinLogging.logger {}
 
 class SpecExamplesParserTests {
 
