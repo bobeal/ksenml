@@ -9,7 +9,6 @@ import io.kotest.matchers.date.shouldBeBefore
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.ksenml.parser.SenMLParser.normalize
 import org.junit.jupiter.api.Test
 import java.time.Instant
 
@@ -24,7 +23,7 @@ class SpecExamplesParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
 
         resolvedRecords.shouldBeSingleton {
             it.n.shouldBe("urn:dev:ow:10e2073a01080063")
@@ -45,7 +44,7 @@ class SpecExamplesParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
 
         resolvedRecords.shouldHaveSize(2)
 
@@ -80,7 +79,7 @@ class SpecExamplesParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
 
         resolvedRecords.shouldHaveSize(7)
 
@@ -121,7 +120,7 @@ class SpecExamplesParserTests {
 
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
 
         resolvedRecords.shouldHaveSize(12)
 
@@ -168,7 +167,7 @@ class SpecExamplesParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
         resolvedRecords.shouldHaveSize(13)
 
         resolvedRecords.should {
@@ -220,7 +219,7 @@ class SpecExamplesParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
         resolvedRecords.shouldHaveSize(4)
 
         resolvedRecords.should {
@@ -266,7 +265,7 @@ class SpecExamplesParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
         resolvedRecords.shouldHaveSize(4)
 
         resolvedRecords[0].should {
@@ -310,7 +309,7 @@ class SpecExamplesParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
         resolvedRecords.shouldHaveSize(3)
 
         resolvedRecords[0].should {
@@ -342,7 +341,7 @@ class SpecExamplesParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
         resolvedRecords.shouldHaveSize(2)
 
         resolvedRecords[1].t.shouldBe(resolvedRecords[0].t.plusSeconds(15))
@@ -359,7 +358,7 @@ class SpecExamplesParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
         resolvedRecords.shouldHaveSize(2)
 
         resolvedRecords[0].n.shouldBe("urn:dev:ow:10e2073a01080063")
@@ -376,7 +375,7 @@ class SpecExamplesParserTests {
                ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
         resolvedRecords.shouldHaveSize(2)
 
         resolvedRecords[0].t.shouldBeEqualComparingTo(resolvedRecords[1].t)
@@ -394,7 +393,7 @@ class SpecExamplesParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
         resolvedRecords.shouldHaveSize(4)
 
         resolvedRecords.should {

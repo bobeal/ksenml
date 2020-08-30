@@ -5,7 +5,6 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.ksenml.parser.SenMLParser.normalize
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -20,7 +19,7 @@ class SenMLParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
 
         resolvedRecords.shouldHaveSize(1)
         resolvedRecords[0].should {
@@ -42,7 +41,7 @@ class SenMLParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
 
         resolvedRecords.shouldHaveSize(1)
         resolvedRecords[0].t.toString().shouldBe("2020-08-06T13:16:55.117Z")
@@ -58,7 +57,7 @@ class SenMLParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
 
         resolvedRecords.shouldHaveSize(2)
         resolvedRecords[0].n.shouldBe("urn:dev:ow:10e2073a01080063:voltage")
@@ -75,7 +74,7 @@ class SenMLParserTests {
             """.trimIndent()
 
         val exception = assertThrows<InvalidSenmlRecordException> {
-            SenMLParser.fromJson(pack).normalize()
+            pack.toSenMLRecords().normalize()
         }
         exception.message.shouldBe("Record has no bn, nor n attribute")
     }
@@ -90,7 +89,7 @@ class SenMLParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
 
         resolvedRecords.shouldHaveSize(2)
         resolvedRecords[0].v.shouldBe(5.0)
@@ -106,7 +105,7 @@ class SenMLParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
 
         resolvedRecords.shouldBeEmpty()
     }
@@ -125,7 +124,7 @@ class SenMLParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
 
         resolvedRecords.size.shouldBe(6)
 
@@ -152,7 +151,7 @@ class SenMLParserTests {
                 ]
             """.trimIndent()
 
-        val resolvedRecords = SenMLParser.fromJson(pack).normalize()
+        val resolvedRecords = pack.toSenMLRecords().normalize()
 
         resolvedRecords.size.shouldBe(2)
         resolvedRecords[0].n.shouldBe("urn:ngsi-ld:Sensor:Sample000001:incoming")
