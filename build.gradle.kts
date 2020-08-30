@@ -37,6 +37,16 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 publishing {
+    publications {
+        create<MavenPublication>("gpr") {
+            run {
+                groupId = "io.bobeal"
+                artifactId = "ksenml"
+                version = "1.0-SNAPSHOT"
+                artifact("$buildDir/libs/ksenml-1.0-SNAPSHOT.jar")
+            }
+        }
+    }
     repositories {
         maven {
             name = "GitHubPackages"
