@@ -7,8 +7,8 @@ plugins {
     `maven-publish`
 }
 
-group = "io.ksenml"
-version = "1.0-SNAPSHOT"
+group = "io.bobeal"
+version = "1.0.2-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -40,10 +40,10 @@ publishing {
     publications {
         create<MavenPublication>("gpr") {
             run {
-                groupId = "io.bobeal"
+                groupId = groupId
                 artifactId = "ksenml"
-                version = "1.0-SNAPSHOT"
-                artifact("$buildDir/libs/ksenml-1.0-SNAPSHOT.jar")
+                version = version
+                artifact("$buildDir/libs/ksenml-${version}.jar")
             }
         }
     }
