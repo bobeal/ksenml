@@ -13,7 +13,8 @@ fun String.toSenMLRecords(): List<Record> =
     try {
         Json { ignoreUnknownKeys = true }.decodeFromString(this)
     } catch (e: kotlinx.serialization.SerializationException) {
-        throw InvalidSenmlRecordException(e.message ?: "Unknown exception while deserializing SenML pack")
+        logger.error(e.message ?: "Unknown exception while deserializing SenML pack")
+        emptyList()
     }
 
 fun List<Record>.normalize(): List<ResolvedRecord> {
