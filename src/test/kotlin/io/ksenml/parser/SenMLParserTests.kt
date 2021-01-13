@@ -6,7 +6,6 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class SenMLParserTests {
 
@@ -73,10 +72,8 @@ class SenMLParserTests {
                 ]
             """.trimIndent()
 
-        val exception = assertThrows<InvalidSenmlRecordException> {
-            pack.toSenMLRecords().normalize()
-        }
-        exception.message.shouldBe("Record has no bn, nor n attribute")
+        val resolvedRecords = pack.toSenMLRecords().normalize()
+        resolvedRecords.shouldBeEmpty()
     }
 
     @Test
