@@ -30,19 +30,21 @@ fun List<Record>.normalize(): List<ResolvedRecord> {
         bu = it.bu ?: bu
         bv = it.bv ?: bv
 
-        val resolvedRecord = ResolvedRecord(
-            n = calculateName(bn, it.n),
-            t = calculateTime(bt ?: 0.0, it.t ?: 0.0),
-            u = calculateUnit(bu, it.u),
-            v = calculateValue(bv, it.v),
-            vs = it.vs,
-            vb = it.vb,
-            vd = it.vd
-        )
+        val n = calculateName(bn, it.n)
+        val v = calculateValue(bv, it.v)
 
-        if (resolvedRecord.hasNoValue()) {
-            logger.warn("Ignoring record $resolvedRecord as it has no value")
+        if (n == null || (v == null && it.vs == null && it.vb == null && it.vd == null)) {
+            logger.warn("Ignoring record $it as its name or value is null")
         } else {
+            val resolvedRecord = ResolvedRecord(
+                    n,
+                    t = calculateTime(bt ?: 0.0, it.t ?: 0.0),
+                    u = calculateUnit(bu, it.u),
+                    v,
+                    vs = it.vs,
+                    vb = it.vb,
+                    vd = it.vd
+            )
             resolvedRecords.add(resolvedRecord)
         }
     }
@@ -50,14 +52,14 @@ fun List<Record>.normalize(): List<ResolvedRecord> {
     return resolvedRecords
 }
 
-private fun calculateName(bn: String?, n: String?): String =
+private fun calculateName(bn: String?, n: String?): String? =
     if (bn != null) {
         if (n != null)
             bn + n
         else
             bn
     } else {
-        n ?: throw InvalidSenmlRecordException("Record has no bn, nor n attribute")
+        n
     }
 
 private fun calculateUnit(bu: String?, u: String?): String? =

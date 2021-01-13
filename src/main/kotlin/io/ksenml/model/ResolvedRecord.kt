@@ -10,7 +10,4 @@ data class ResolvedRecord(
     val vs: String?,
     val vb: Boolean?,
     val vd: String?
-) {
-    fun hasNoValue(): Boolean =
-        v == null && vs == null && vb == null && vd == null
-}
+)
