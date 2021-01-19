@@ -54,8 +54,15 @@ fun List<Record>.normalize(): List<ResolvedRecord> {
 
 private fun calculateName(bn: String?, n: String?): String? =
     if (bn != null) {
-        if (n != null)
-            bn + n
+        if (n != null) {
+            val lastBnChar = bn.last()
+            // the trailing separator in the bn often misses from the payloads,
+            // so add it manually if last char in bn is not alphanumeric
+            when {
+                (lastBnChar in 'a'..'z' || lastBnChar in 'A'..'Z' || lastBnChar in '0'..'9') -> "$bn:$n"
+                else -> "$bn$n"
+            }
+        }
         else
             bn
     } else {
