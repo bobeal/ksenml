@@ -9,6 +9,12 @@ In progress implementation of the [SenML specification](https://tools.ietf.org/i
 
 * Parse JSON representation of a SenML pack
 
+## Releases
+
+The artifacts are automatically published on Jitpack.
+
+This is done via a GitHub action.
+
 ## TODO
 
 * Parse CBOR and other representations
