@@ -154,4 +154,19 @@ class SenMLParserTests {
         resolvedRecords[0].n.shouldBe("urn:ngsi-ld:Sensor:Sample000001:incoming")
         resolvedRecords[1].n.shouldBe("urn:ngsi-ld:Sensor:Sample000002:outgoing")
     }
+
+    @Test
+    fun `it should handle special NaN value in a record`() {
+        val pack =
+            """
+                 [
+                    { "v": NaN, "u": "s", "n": "timeOnline" }
+                ]
+            """.trimIndent()
+
+        val resolvedRecords = pack.toSenMLRecords().normalize()
+
+        resolvedRecords.size.shouldBe(1)
+        resolvedRecords[0].v.shouldBe(Double.NaN)
+    }
 }

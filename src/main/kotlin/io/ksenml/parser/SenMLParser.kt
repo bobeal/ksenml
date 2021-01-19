@@ -11,7 +11,10 @@ private val logger = LoggerFactory.getLogger("SenMLParser")
 
 fun String.toSenMLRecords(): List<Record> =
     try {
-        Json { ignoreUnknownKeys = true }.decodeFromString(this)
+        Json {
+            ignoreUnknownKeys = true
+            allowSpecialFloatingPointValues = true
+        }.decodeFromString(this)
     } catch (e: kotlinx.serialization.SerializationException) {
         logger.error(e.message ?: "Unknown exception while deserializing SenML pack")
         emptyList()
