@@ -13,7 +13,11 @@ In progress implementation of the [SenML specification](https://tools.ietf.org/i
 
 The artifacts are automatically published on Jitpack.
 
-This is done via a GitHub action.
+This is done via a GitHub action when a release is created.
+
+## How to use it in your project
+
+Follow instructions in https://jitpack.io/
 
 ## TODO
 
