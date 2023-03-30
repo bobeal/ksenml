@@ -9,12 +9,14 @@ import kotlin.math.pow
 
 private val logger = LoggerFactory.getLogger("SenMLParser")
 
+private val json = Json {
+    ignoreUnknownKeys = true
+    allowSpecialFloatingPointValues = true
+}
+
 fun String.toSenMLRecords(): List<Record> =
     try {
-        Json {
-            ignoreUnknownKeys = true
-            allowSpecialFloatingPointValues = true
-        }.decodeFromString(this)
+        json.decodeFromString(this)
     } catch (e: kotlinx.serialization.SerializationException) {
         logger.error(e.message ?: "Unknown exception while deserializing SenML pack")
         emptyList()
@@ -88,4 +90,3 @@ private fun calculateTime(bt: Double, t: Double): Instant {
     else
         Instant.now().plusSeconds(totalTime.toLong())
 }
-

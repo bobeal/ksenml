@@ -2,8 +2,8 @@ import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.0"
-    kotlin("plugin.serialization") version "1.4.0"
+    kotlin("jvm") version "1.5.30"
+    kotlin("plugin.serialization") version "1.5.30"
     `maven-publish`
 }
 
@@ -12,16 +12,16 @@ version = "1.0.7"
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
     implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.2.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
     implementation("org.slf4j:slf4j-simple:1.7.29")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
-    testImplementation("io.kotest:kotest-assertions-core:4.2.2")
+    testImplementation("io.kotest:kotest-assertions-core:4.6.3")
 }
 
 tasks.test {
